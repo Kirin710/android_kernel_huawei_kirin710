@@ -17,9 +17,11 @@
 
 #include <linux/genalloc.h>
 #include <linux/string.h>
+#include <linux/gfp.h>
 
 #define PMALLOC_DEFAULT_ALLOC_ORDER (-1)
 
+//#define __GFP_ZERO	0
 /*
  * Library for dynamic allocation of pools of memory that can be,
  * after initialization, marked as read-only.
