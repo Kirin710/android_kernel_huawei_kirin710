@@ -383,12 +383,12 @@ CONFIG_SHELL := $(shell if [ -x "$$BASH" ]; then echo $$BASH; \
 HOST_LFS_CFLAGS := $(shell getconf LFS_CFLAGS 2>/dev/null)
 HOST_LFS_LDFLAGS := $(shell getconf LFS_LDFLAGS 2>/dev/null)
 HOST_LFS_LIBS := $(shell getconf LFS_LIBS 2>/dev/null)
-ifeq ($(strip $(cfi_check)),true)
-CLANG_PREBUILTS_PATH ?= $(srctree)/../../prebuilts/cfi_clang/linux-x86/cfi_clang/
-else
-CLANG_PREBUILTS_PATH ?= $(srctree)/../../prebuilts/clang/host/linux-x86/clang-r346389c/
-endif
-CLANG_PREBUILT_BIN := $(CLANG_PREBUILTS_PATH)bin/
+#ifeq ($(strip $(cfi_check)),true)
+#CLANG_PREBUILTS_PATH ?= $(srctree)/../../prebuilts/cfi_clang/linux-x86/cfi_clang/
+#else
+#CLANG_PREBUILTS_PATH ?= $(srctree)/../../prebuilts/clang/host/linux-x86/clang-r346389c/
+#endif
+#CLANG_PREBUILT_BIN := $(CLANG_PREBUILTS_PATH)bin/
 
 HOSTCC       = $(CLANG_PREBUILT_BIN)clang
 HOSTCXX      = $(CLANG_PREBUILT_BIN)clang++
@@ -554,6 +554,10 @@ RETPOLINE_CFLAGS_CLANG := -mretpoline-external-thunk
 RETPOLINE_VDSO_CFLAGS_CLANG := -mretpoline
 RETPOLINE_CFLAGS := $(call cc-option,$(RETPOLINE_CFLAGS_GCC),$(call cc-option,$(RETPOLINE_CFLAGS_CLANG)))
 RETPOLINE_VDSO_CFLAGS := $(call cc-option,$(RETPOLINE_VDSO_CFLAGS_GCC),$(call cc-option,$(RETPOLINE_VDSO_CFLAGS_CLANG)))
+# -mindirect-branch is incompatible with -fcf-protection, so ensure the
+# latter is disabled
+RETPOLINE_CFLAGS += $(call cc-option,-fcf-protection=none,)
+RETPOLINE_VDSO_CFLAGS += $(call cc-option,-fcf-protection=none,)
 export RETPOLINE_CFLAGS
 export RETPOLINE_VDSO_CFLAGS
 
