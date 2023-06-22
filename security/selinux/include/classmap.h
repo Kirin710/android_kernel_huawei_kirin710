@@ -1,5 +1,6 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 #include <linux/capability.h>
+#include <linux/socket.h>
 
 #define COMMON_FILE_SOCK_PERMS "ioctl", "read", "write", "create", \
     "getattr", "setattr", "lock", "relabelfrom", "relabelto", "append", "map"
@@ -243,6 +244,9 @@ struct security_class_mapping secclass_map[] = {
 	{ NULL }
   };
 
-#if PF_MAX > 44
+//#if PF_MAX > 44
+//#error New address family defined, please update secclass_map.
+//#endif
+#if PF_MAX > 45
 #error New address family defined, please update secclass_map.
 #endif
